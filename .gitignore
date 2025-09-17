@@ -1,5 +1,130 @@
-﻿################################################################################
-# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
-################################################################################
+﻿# Arquivos do Visual Studio e .NET
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.csproj.user
+*.csproj.bak
+*.ncrunchproject
+*.dotCover
+*.pidb
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*_i.h
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.scc
+*.vscode/
 
-/backend/.vs/PersonalChess/CopilotIndices/17.14.1091.29919
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]uild/
+[Bb]uildOutput/
+
+# NuGet
+[Nn]uGet/
+*.nupkg
+.nuget/
+packages/
+packages-*/
+nuget.exe
+*.nupkg
+
+# Arquivos do Angular/Node.js
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.vscode/
+frontend/.npm
+frontend/coverage/
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Arquivos de IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Arquivos de sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+Desktop.ini
+
+# Arquivos de usuário
+*.backup
+*.bak
+*.tmp
+
+# Logs
+*.log
+logs/
+*.etl
+*.trace
+
+# Outros
+.sass-cache/
+*.sql
+*.sqlite
+migrations/
+App_Data/
+*.orig
+*.rar
+*.zip
+*.7z
+
+# Arquivos de publicação
+publish/
+*.pubxml
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+
+# Backup & swap files
+*.back
+*.sav
+*.save
+*.swp
+*.swo
+*~
