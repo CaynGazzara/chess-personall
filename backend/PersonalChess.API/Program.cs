@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Cors;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +10,10 @@ builder.Services.AddSwaggerGen();
 // Configurar CORS para permitir requests do Angular
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngular",
+    options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200")
+            policy.AllowAnyOrigin()
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -29,12 +28,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Use CORS - IMPORTANTE: deve vir antes de UseAuthorization e MapControllers
+app.UseCors("AllowAll");
+
 app.UseHttpsRedirection();
-
-app.UseCors("AllowAngular");
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

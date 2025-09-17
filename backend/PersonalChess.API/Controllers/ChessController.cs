@@ -15,10 +15,12 @@ public class ChessController : ControllerBase
     {
         var boardResponse = new
         {
-            Squares = ConvertBoardToDto(_board.Squares),
-            CurrentPlayer = _board.CurrentPlayer,
-            GameState = _board.GameState
+            Squares = _board.SerializableSquares,
+            CurrentPlayer = _board.CurrentPlayer.ToString(), // Use a conversão
+            GameState = _board.GameState.ToString() // Use a conversão
         };
+
+        Console.WriteLine($"Returning board - GameState: {_board.GameState}, CurrentPlayer: {_board.CurrentPlayer}");
 
         return Ok(boardResponse);
     }
@@ -36,61 +38,31 @@ public class ChessController : ControllerBase
                 Success = true,
                 Board = new
                 {
-                    Squares = ConvertBoardToDto(_board.Squares),
+                    Squares = _board.SerializableSquares,
                     CurrentPlayer = _board.CurrentPlayer,
                     GameState = _board.GameState
-                }
+                },
+                Message = "Movimento realizado com sucesso"
             };
 
             return Ok(response);
         }
 
-        return BadRequest(new { Success = false, Message = "Movimento inválido" });
-    }
-
-    [HttpPost("reset")]
-    public IActionResult ResetGame()
-    {
-        _board = new Board();
-        return Ok(new { Success = true, Message = "Jogo reiniciado" });
-    }
-
-    private object[,] ConvertBoardToDto(Piece[,] squares)
-    {
-        var result = new object[Board.Size, Board.Size];
-
-        for (int i = 0; i < Board.Size; i++)
+        return BadRequest(new
         {
-            for (int j = 0; j < Board.Size; j++)
-            {
-                if (squares[i, j] != null)
-                {
-                    result[i, j] = new
-                    {
-                        Type = squares[i, j].Type,
-                        Color = squares[i, j].Color,
-                        HasMoved = squares[i, j].HasMoved
-                    };
-                }
-                else
-                {
-                    result[i, j] = null;
-                }
-            }
-        }
-
-        return result;
+            Success = false,
+            Message = "Movimento inválido - pode estar deixando o rei em cheque ou violando as regras"
+        });
     }
-}
+    public class MoveRequest
+    {
+        public PositionDto From { get; set; }
+        public PositionDto To { get; set; }
+    }
 
-public class MoveRequest
-{
-    public PositionDto From { get; set; }
-    public PositionDto To { get; set; }
-}
-
-public class PositionDto
-{
-    public int Rank { get; set; }
-    public int File { get; set; }
+    public class PositionDto
+    {
+        public int Rank { get; set; }
+        public int File { get; set; }
+    }
 }
