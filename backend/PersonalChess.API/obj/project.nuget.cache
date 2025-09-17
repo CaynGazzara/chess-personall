@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "1djArmI14eE=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\USER\\source\\Repos\\chess-personall\\backend\\PersonalChess.API\\PersonalChess.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\USER\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.8\\microsoft.aspnetcore.openapi.9.0.8.nupkg.sha512",
+    "C:\\Users\\USER\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
