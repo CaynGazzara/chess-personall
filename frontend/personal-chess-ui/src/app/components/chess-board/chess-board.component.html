@@ -14,8 +14,7 @@
       </div>
 
       <div class="game-controls">
-        <button (click)="resetGame()" class="btn btn-primary"
-          [disabled]="gameState === 'InProgress' || gameState === 'Check'">
+        <button (click)="resetGame()" class="btn btn-primary">
           ♻️ Reiniciar Jogo
         </button>
         <button class="btn btn-primary" (click)="goHome()">← Voltar</button>
@@ -27,28 +26,43 @@
     </div>
   </div>
 
-  <div class="chess-board">
-    <div *ngFor="let row of board; let i = index" class="board-row">
-      <div *ngFor="let piece of row; let j = index"
-        [class.selected]="selectedPiece && selectedPiece.position.rank === i && selectedPiece.position.file === j"
-        [class.possible-move]="isPossibleMove(i, j)"
-        [class.invalid-move]="selectedPiece && !isPossibleMove(i, j) && (i !== selectedPiece.position.rank || j !== selectedPiece.position.file)"
-        class="board-square" [class.light]="(i + j) % 2 === 0" [class.dark]="(i + j) % 2 !== 0"
-        (click)="onSquareClick(i, j)">
+  <!-- Cemitérios laterais + tabuleiro central -->
+  <div class="board-wrapper">
+    <div class="cemetery cemetery--white">
+      <h4>Brancas Capturadas</h4>
+      <div class="cemetery-pieces">
+        <img *ngFor="let piece of capturedWhite" [src]="piece" class="cemetery-piece" />
+      </div>
+    </div>
+    <div class="chess-board-area">
+      <div class="chess-board">
+        <div *ngFor="let row of board; let i = index" class="board-row">
+          <div *ngFor="let piece of row; let j = index"
+            [class.selected]="selectedPiece && selectedPiece.position.rank === i && selectedPiece.position.file === j"
+            [class.possible-move]="isPossibleMove(i, j)"
+            [class.invalid-move]="selectedPiece && !isPossibleMove(i, j) && (i !== selectedPiece.position.rank || j !== selectedPiece.position.file)"
+            class="board-square" [class.light]="(i + j) % 2 === 0" [class.dark]="(i + j) % 2 !== 0"
+            (click)="onSquareClick(i, j)">
 
-        <span class="coordinate" *ngIf="j === 0">{{ 8 - i }}</span>
-        <span class="coordinate" *ngIf="i === 7">{{ getFileLetter(j) }}</span>
+            <span class="coordinate" *ngIf="j === 0">{{ 8 - i }}</span>
+            <span class="coordinate" *ngIf="i === 7">{{ getFileLetter(j) }}</span>
 
-        <div *ngIf="piece" class="piece-container">
-          <img *ngIf="getPieceImage(piece) as src" [src]="src" [alt]="piece.type" class="chess-piece">
+            <div *ngIf="piece" class="piece-container">
+              <img *ngIf="getPieceImage(piece) as src" [src]="src" [alt]="piece.type" class="chess-piece">
+            </div>
+
+            <div class="move-indicator" *ngIf="isPossibleMove(i, j)">●</div>
+          </div>
         </div>
-
-        <div class="move-indicator" *ngIf="isPossibleMove(i, j)">●</div>
+      </div>
+    </div>
+    <div class="cemetery cemetery--black">
+      <h4>Pretas Capturadas</h4>
+      <div class="cemetery-pieces">
+        <img *ngFor="let piece of capturedBlack" [src]="piece" class="cemetery-piece" />
       </div>
     </div>
   </div>
-
-  <!-- debug info removed -->
 
   <div class="game-status-message" [class.status-check]="gameState === 'Check'"
     [class.status-checkmate]="gameState === 'WhiteWon' || gameState === 'BlackWon'"
@@ -60,7 +74,6 @@
     <span *ngIf="gameState === 'Draw'">🤝 Empate!</span>
     <span *ngIf="gameState === 'Stalemate'">🤝 Afogamento! Empate por afogamento do rei.</span>
   </div>
-
 
   <div class="game-status-message" [class.status-check]="gameState === 'Check'"
     [class.status-checkmate]="gameState === 'WhiteWon' || gameState === 'BlackWon'"
