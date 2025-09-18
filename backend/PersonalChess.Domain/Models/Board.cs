@@ -86,63 +86,96 @@ public class Board
 
     public bool MakeMove(Position from, Position to)
     {
-        if (GameState != GameState.InProgress)
+        Console.WriteLine($"MakeMove: from ({from.Rank},{from.File}) to ({to.Rank},{to.File})");
+
+        // Permite movimentos mesmo em estado de Check
+        if (GameState != GameState.InProgress && GameState != GameState.Check)
+        {
+            Console.WriteLine("Game is not in progress");
             return false;
+        }
 
         var piece = Squares[from.Rank, from.File];
         if (piece == null || piece.Color != CurrentPlayer)
+        {
+            Console.WriteLine("Invalid piece selection");
             return false;
+        }
 
         if (!piece.IsValidMove(from, to, this))
+        {
+            Console.WriteLine("Invalid move for this piece");
             return false;
+        }
 
-        // Simular movimento para verificar se deixa o rei em cheque
+        // Simular movimento
         var tempBoard = (Piece[,])Squares.Clone();
         tempBoard[to.Rank, to.File] = piece;
         tempBoard[from.Rank, from.File] = null;
 
+        // Verificar se movimento deixa o próprio rei em cheque
         if (IsKingInCheck(CurrentPlayer, tempBoard))
-            return false; // Movimento deixaria o rei em cheque
+        {
+            Console.WriteLine("Move would leave king in check");
+            return false;
+        }
 
         // Executar movimento real
+        var capturedPiece = Squares[to.Rank, to.File]; // Peça capturada
         Squares[to.Rank, to.File] = piece;
         Squares[from.Rank, from.File] = null;
         piece.HasMoved = true;
 
-        // Verificar estado do jogo após o movimento
+        Console.WriteLine($"Move executed. Captured piece: {capturedPiece?.GetType().Name}");
+
+        // VERIFICAÇÃO CRÍTICA: Se capturou o rei, fim de jogo
+        if (capturedPiece is King)
+        {
+            GameState = CurrentPlayer == PieceColor.White ? GameState.WhiteWon : GameState.BlackWon;
+            Console.WriteLine($"KING CAPTURED! {CurrentPlayer} wins!");
+            return true;
+        }
+
+        // Verificar estado do jogo após movimento
         var opponentColor = CurrentPlayer == PieceColor.White ? PieceColor.Black : PieceColor.White;
 
-        if (IsKingInCheck(opponentColor, Squares))
+        bool isOpponentInCheck = IsKingInCheck(opponentColor, Squares);
+        Console.WriteLine($"{opponentColor} in check: {isOpponentInCheck}");
+
+        if (isOpponentInCheck)
         {
             if (IsCheckmate(opponentColor))
             {
                 GameState = CurrentPlayer == PieceColor.White ? GameState.WhiteWon : GameState.BlackWon;
+                Console.WriteLine($"Checkmate! {CurrentPlayer} wins!");
             }
-            // Pode adicionar lógica para notificar cheque aqui
+            else
+            {
+                GameState = GameState.Check;
+                Console.WriteLine($"Check for {opponentColor}");
+            }
         }
-        else if (IsStalemate(opponentColor))
+        else
         {
-            GameState = GameState.Stalemate;
-        }
-        else if (IsDraw()) // Implemente este método se quiser outras condições de empate
-        {
-            GameState = GameState.Draw;
+            if (IsStalemate(opponentColor))
+            {
+                GameState = GameState.Stalemate;
+                Console.WriteLine("Stalemate!");
+            }
+            else
+            {
+                GameState = GameState.InProgress; // Volta para estado normal
+                Console.WriteLine("Game continues normally");
+            }
         }
 
         // Alternar jogador
         CurrentPlayer = opponentColor;
+        Console.WriteLine($"New current player: {CurrentPlayer}, Game state: {GameState}");
 
         return true;
     }
 
-    private bool IsDraw()
-    {
-        // Implemente condições adicionais de empate aqui
-        // Exemplo: empate por insuficiência de material, regra dos 50 movimentos, etc.
-
-        // Por enquanto, retorna false
-        return false;
-    }
     private bool IsStalemate(PieceColor color)
     {
         // Verifica se não está em cheque mas não tem movimentos legais
@@ -234,9 +267,14 @@ public class Board
 
     private bool IsCheckmate(PieceColor color)
     {
+        Console.WriteLine($"Checking checkmate for {color}");
+
         // Primeiro verifica se o rei está em cheque
         if (!IsKingInCheck(color, Squares))
+        {
+            Console.WriteLine("King is not in check - not checkmate");
             return false;
+        }
 
         // Verifica se existe algum movimento legal que saia do cheque
         for (int i = 0; i < Size; i++)
@@ -246,13 +284,16 @@ public class Board
                 var piece = Squares[i, j];
                 if (piece != null && piece.Color == color)
                 {
-                    // Para cada peça da cor, verifica todos os movimentos possíveis
                     for (int x = 0; x < Size; x++)
                     {
                         for (int y = 0; y < Size; y++)
                         {
                             var from = new Position(i, j);
                             var to = new Position(x, y);
+
+                            // Pula movimentos para a mesma posição
+                            if (from.Rank == to.Rank && from.File == to.File)
+                                continue;
 
                             if (piece.IsValidMove(from, to, this))
                             {
@@ -261,9 +302,12 @@ public class Board
                                 tempBoard[to.Rank, to.File] = piece;
                                 tempBoard[from.Rank, from.File] = null;
 
-                                // Verifica se ainda está em cheque após o movimento
+                                // Verifica se o movimento tira do cheque
                                 if (!IsKingInCheck(color, tempBoard))
+                                {
+                                    Console.WriteLine($"Legal move found: {piece.GetType().Name} from ({i},{j}) to ({x},{y})");
                                     return false; // Ainda há movimentos legais
+                                }
                             }
                         }
                     }
@@ -271,7 +315,19 @@ public class Board
             }
         }
 
-        // Nenhum movimento legal encontrado - é cheque-mate!
+        Console.WriteLine("No legal moves found - CHECKMATE!");
         return true;
+    }
+    public void Reset()
+    {
+        // Reinicia o tabuleiro
+        Squares = new Piece[Size, Size];
+        InitializeBoard();
+
+        // Reinicia o estado do jogo
+        CurrentPlayer = PieceColor.White;
+        GameState = GameState.InProgress;
+
+        Console.WriteLine("Game reset - new game started");
     }
 }

@@ -4,6 +4,7 @@ public enum GameState
 {
     NotStarted,
     InProgress,
+    Check,
     WhiteWon,
     BlackWon,
     Draw,
@@ -19,6 +20,7 @@ public static class GameStateExtensions
         {
             GameState.NotStarted => "NotStarted",
             GameState.InProgress => "InProgress",
+            GameState.Check => "Check",
             GameState.WhiteWon => "WhiteWon",
             GameState.BlackWon => "BlackWon",
             GameState.Draw => "Draw",

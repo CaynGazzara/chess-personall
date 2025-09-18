@@ -49,8 +49,8 @@ export class ChessBoardComponent implements OnInit {
     console.log('Game State:', this.gameState);
     console.log('Current Player:', this.currentPlayer);
 
-    // Use a versão convertida para comparação
-    if (this.gameState !== GameState.InProgress) {
+    // CORREÇÃO: "Check" ainda é um estado de jogo em andamento
+    if (this.gameState !== GameState.InProgress && this.gameState !== GameState.Check) {
       alert(`Jogo não está em andamento! Estado atual: ${this.gameState}`);
       return;
     }
@@ -93,12 +93,13 @@ export class ChessBoardComponent implements OnInit {
     if (typeof state === 'number') {
       // Mapeamento baseado na ordem do enum C#
       const states = [
-        GameState.NotStarted,    // 0
-        GameState.InProgress,    // 1  
-        GameState.WhiteWon,      // 2
-        GameState.BlackWon,      // 3
-        GameState.Draw,          // 4
-        GameState.Stalemate      // 5
+        GameState.NotStarted,
+        GameState.InProgress,
+        GameState.Check,
+        GameState.WhiteWon,
+        GameState.BlackWon,
+        GameState.Draw,
+        GameState.Stalemate
       ];
       return states[state] || 'Unknown';
     }
@@ -209,12 +210,34 @@ export class ChessBoardComponent implements OnInit {
 
   resetGame(): void {
     this.chessService.resetGame().subscribe({
-      next: () => {
-        this.loadBoard();
+      next: (response: any) => {
+        if (response.success) {
+          console.log('Game reset successfully', response);
+
+          // Atualize o board com a resposta se disponível
+          if (response.board) {
+            this.board = response.board.squares;
+            this.currentPlayer = this.convertPieceColor(response.board.currentPlayer);
+            this.gameState = this.convertGameState(response.board.gameState);
+          } else {
+            // Se não vier board na resposta, recarregue
+            this.loadBoard();
+          }
+
+          this.selectedPiece = null;
+          this.possibleMoves = [];
+
+          alert('Jogo reiniciado! ♻️');
+        } else {
+          alert(`Erro ao reiniciar: ${response.message}`);
+        }
       },
       error: (error) => {
         console.error('Error resetting game:', error);
-        alert('Erro ao reiniciar o jogo');
+        alert('Erro ao reiniciar o jogo. Tentando recarregar...');
+
+        // Fallback: recarregar o board mesmo com erro
+        this.loadBoard();
       }
     });
   }

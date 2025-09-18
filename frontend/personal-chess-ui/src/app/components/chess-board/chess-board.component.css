@@ -21,14 +21,41 @@
   font-weight: bold;
 }
 
-.reset-btn {
+.game-controls {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.reset-btn,
+.refresh-btn {
   background-color: #4CAF50;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.reset-btn:hover:not(:disabled),
+.refresh-btn:hover {
+  background-color: #45a049;
+}
+
+.reset-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.refresh-btn {
+  background-color: #2196F3;
+}
+
+.refresh-btn:hover {
+  background-color: #0b7dda;
 }
 
 .reset-btn:hover {
@@ -185,7 +212,7 @@
   padding: 15px;
   border-radius: 5px;
   z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .game-status-message {
@@ -196,9 +223,20 @@
   text-align: center;
 }
 
-.status-check { background: #fff3cd; color: #856404; }
-.status-checkmate { background: #dc3545; color: white; }
-.status-draw { background: #6c757d; color: white; }
+.status-check {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-checkmate {
+  background: #dc3545;
+  color: white;
+}
+
+.status-draw {
+  background: #6c757d;
+  color: white;
+}
 
 .debug-info {
   margin-top: 20px;
@@ -213,7 +251,7 @@
     width: 40px;
     height: 40px;
   }
-  
+
   .chess-piece {
     width: 35px;
     height: 35px;

@@ -54,6 +54,39 @@ public class ChessController : ControllerBase
             Message = "Movimento inválido - pode estar deixando o rei em cheque ou violando as regras"
         });
     }
+
+    [HttpPost("reset")]
+    public IActionResult ResetGame()
+    {
+        try
+        {
+            _board.Reset();
+
+            var boardResponse = new
+            {
+                Squares = _board.SerializableSquares,
+                CurrentPlayer = _board.CurrentPlayer.ToString(),
+                GameState = _board.GameState.ToString()
+            };
+
+            return Ok(new
+            {
+                Success = true,
+                Message = "Jogo reiniciado com sucesso",
+                Board = boardResponse
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                Success = false,
+                Message = $"Erro ao reiniciar o jogo: {ex.Message}"
+            });
+        }
+    }
+
+
     public class MoveRequest
     {
         public PositionDto From { get; set; }
