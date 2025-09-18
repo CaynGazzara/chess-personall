@@ -3,6 +3,7 @@ import { ChessService, BoardResponse } from '../../services/chess.service';
 import { Position } from '../../models/position.model';
 import { PieceColor } from '../../models/enums/piece-color.enum';
 import { GameState } from '../../models/game-state.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chess-board',
@@ -17,7 +18,7 @@ export class ChessBoardComponent implements OnInit {
   gameState: string = GameState.NotStarted;
   possibleMoves: Position[] = [];
 
-  constructor(private chessService: ChessService) { }
+  constructor(private chessService: ChessService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadBoard();
@@ -35,19 +36,17 @@ export class ChessBoardComponent implements OnInit {
         this.selectedPiece = null;
         this.possibleMoves = [];
 
-        console.log('Board loaded - GameState:', this.gameState, 'CurrentPlayer:', this.currentPlayer);
+        // board loaded
       },
       error: (error) => {
         console.error('Error loading board:', error);
-        alert('Erro ao carregar o tabuleiro');
+        this.showNotification('Erro ao carregar o tabuleiro', 'error');
       }
     });
   }
 
   onSquareClick(row: number, col: number): void {
-    console.log('Clicked on:', row, col, 'Piece:', this.board[row][col]);
-    console.log('Game State:', this.gameState);
-    console.log('Current Player:', this.currentPlayer);
+    // click handled
 
     // CORREÇÃO: "Check" ainda é um estado de jogo em andamento
     if (this.gameState !== GameState.InProgress && this.gameState !== GameState.Check) {
@@ -63,18 +62,18 @@ export class ChessBoardComponent implements OnInit {
 
     // Se já temos uma peça selecionada, tentar mover
     if (this.selectedPiece) {
-      console.log('Attempting move from:', this.selectedPiece.position, 'to:', clickedPosition);
+      // attempting move
       this.attemptMove(this.selectedPiece.position, clickedPosition);
     }
     // Se não há peça selecionada e clicamos em uma peça do jogador atual
     else if (clickedPiece && clickedPieceColor === this.currentPlayer) {
-      console.log('Selected piece:', clickedPiece);
+      // selected piece
       this.selectedPiece = { position: clickedPosition, piece: clickedPiece };
       this.calculatePossibleMoves(clickedPosition, clickedPiece);
     }
     // Se clicamos em um espaço vazio ou peça do oponente sem ter selecionado nada
     else {
-      console.log('Deselecting piece');
+      // deselecting piece
       this.selectedPiece = null;
       this.possibleMoves = [];
     }
@@ -121,13 +120,13 @@ export class ChessBoardComponent implements OnInit {
 
           // Mensagens de feedback
           if (this.gameState === GameState.WhiteWon) {
-            alert('Brancas venceram! ♔');
+            this.showNotification('Brancas venceram! ♔', 'success');
           } else if (this.gameState === GameState.BlackWon) {
-            alert('Pretas venceram! ♚');
+            this.showNotification('Pretas venceram! ♚', 'success');
           } else if (this.gameState === GameState.Draw) {
-            alert('Empate! 🏳️');
+            this.showNotification('Empate! 🏳️', 'info');
           } else if (this.gameState === GameState.Stalemate) {
-            alert('Afogamento! 🤝');
+            this.showNotification('Afogamento! 🤝', 'info');
           }
 
         } else {
@@ -138,18 +137,13 @@ export class ChessBoardComponent implements OnInit {
         this.selectedPiece = null;
         this.possibleMoves = [];
       },
-      error: (error) => {
+      error: (error: Error) => {
         console.error('Error making move:', error);
-        this.showMoveError('Erro de comunicação com o servidor');
+        this.showMoveError(error.message); // Agora usa a mensagem específica
         this.selectedPiece = null;
         this.possibleMoves = [];
       }
     });
-  }
-
-  private showMoveError(message: string): void {
-    // Você pode substituir por um toast/snackbar mais elegante
-    alert(`❌ ${message}`);
   }
 
   calculatePossibleMoves(position: Position, piece: any): void {
@@ -227,19 +221,23 @@ export class ChessBoardComponent implements OnInit {
           this.selectedPiece = null;
           this.possibleMoves = [];
 
-          alert('Jogo reiniciado! ♻️');
+          this.showNotification('Jogo reiniciado! ♻️', 'success');
         } else {
-          alert(`Erro ao reiniciar: ${response.message}`);
+          this.showNotification('Erro ao reiniciar o jogo', 'error');
         }
       },
       error: (error) => {
         console.error('Error resetting game:', error);
-        alert('Erro ao reiniciar o jogo. Tentando recarregar...');
+        this.showNotification('Erro ao reiniciar o jogo', 'error');
 
         // Fallback: recarregar o board mesmo com erro
         this.loadBoard();
       }
     });
+  }
+
+  goHome(): void {
+    this.router.navigate(['/']);
   }
 
   // Peão
@@ -384,5 +382,53 @@ export class ChessBoardComponent implements OnInit {
   // Método auxiliar para verificar se a posição é válida
   private isValidPosition(row: number, col: number): boolean {
     return row >= 0 && row < 8 && col >= 0 && col < 8;
+  }
+
+  private showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
+    // Remove notificações anteriores
+    const existingNotifications = document.querySelectorAll('.chess-notification');
+    existingNotifications.forEach(notification => notification.remove());
+
+    const notification = document.createElement('div');
+    notification.className = `chess-notification ${type}`;
+    notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: white;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    font-family: Arial, sans-serif;
+    max-width: 300px;
+  `;
+
+    switch (type) {
+      case 'success':
+        notification.style.background = '#4CAF50';
+        break;
+      case 'error':
+        notification.style.background = '#f44336';
+        break;
+      case 'info':
+        notification.style.background = '#2196F3';
+        break;
+    }
+
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    // Remove após 3 segundos
+    setTimeout(() => {
+      if (document.body.contains(notification)) {
+        document.body.removeChild(notification);
+      }
+    }, 3000);
+  }
+
+  // Atualize o showMoveError para usar o novo sistema
+  private showMoveError(message: string): void {
+    this.showNotification(`❌ ${message}`, 'error');
   }
 }

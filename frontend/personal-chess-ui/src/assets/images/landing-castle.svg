@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b0b0b"/>
+      <stop offset="100%" stop-color="#111"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)" />
+  <!-- Simple stylized gothic castle silhouette -->
+  <g fill="#0f0f0f">
+    <rect x="100" y="420" width="200" height="200" />
+    <rect x="160" y="360" width="80" height="60" />
+    <rect x="300" y="360" width="40" height="100" />
+
+    <rect x="380" y="340" width="140" height="280" />
+    <polygon points="380,340 450,260 520,340" fill="#0b0b0b" />
+
+    <rect x="560" y="400" width="220" height="220" />
+    <polygon points="560,400 670,300 780,400" fill="#0b0b0b" />
+
+    <rect x="820" y="380" width="200" height="240" />
+    <polygon points="820,380 920,300 1020,380" fill="#0b0b0b" />
+
+    <!-- Towers -->
+    <rect x="120" y="300" width="40" height="140" />
+    <polygon points="120,300 140,250 160,300" fill="#0b0b0b" />
+
+    <rect x="960" y="300" width="40" height="140" />
+    <polygon points="960,300 980,250 1000,300" fill="#0b0b0b" />
+  </g>
+  <!-- subtle textured overlay -->
+  <g opacity="0.06" fill="#fff">
+    <circle cx="200" cy="150" r="220" />
+    <circle cx="900" cy="100" r="160" />
+  </g>
+</svg>

@@ -1,13 +1,18 @@
-<div class="app-container">
-  <header>
-    <h1>{{ title }}</h1>
+<div class="app-shell">
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo">♟️</div>
+      <div class="title">{{ title }}</div>
+    </div>
   </header>
-  
-  <main>
-    <app-chess-board></app-chess-board>
+
+  <main class="app-main">
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
   </main>
-  
-  <footer>
+
+  <footer class="app-footer">
     <p>Desenvolvido com Angular e .NET</p>
   </footer>
 </div>

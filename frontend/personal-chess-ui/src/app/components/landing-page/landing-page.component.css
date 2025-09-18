@@ -1,0 +1,21 @@
+.landing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 85vh;
+  background: linear-gradient(rgba(6,6,6,0.55), rgba(12,6,6,0.55)), url('/assets/images/landing-castle.svg') center/cover no-repeat;
+}
+.card {
+  background: linear-gradient(180deg, rgba(6,6,6,0.9), rgba(12,6,6,0.75));
+  padding: 2.5rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 18px 48px rgba(0,0,0,0.75);
+  text-align: center;
+  max-width: 640px;
+  color: var(--text-light);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.card h1 { margin: 0 0 0.5rem 0; font-family: 'Georgia', serif; font-size: 36px; letter-spacing: 1.6px }
+.card .subtitle { color: rgba(230,225,220,0.7); margin-bottom: 1.25rem; }
+.start-btn { border-radius: 8px; padding: 8px 12px; font-weight:600; cursor:pointer }
+.card .btn { margin-top: 8px }

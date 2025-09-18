@@ -102,6 +102,12 @@ public class Board
             return false;
         }
 
+        if (piece.Color != CurrentPlayer)
+        {
+            Console.WriteLine("Not your turn");
+            return false;
+        }
+
         if (!piece.IsValidMove(from, to, this))
         {
             Console.WriteLine("Invalid move for this piece");

@@ -1,1 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
+:root{
+	--app-max-width: 980px;
+	--gothic-bg: #0f0f10;
+	--gothic-accent: #6b0f17; /* dark crimson */
+	--gothic-accent-2: #2e1b2b; /* deep plum */
+	--card-bg: rgba(12,12,12,0.75);
+	--text-light: #e6e1dc;
+}
+
+body{ margin:0; font-family: Georgia, 'Times New Roman', serif; background: radial-gradient(circle at 10% 10%, rgba(40,35,40,0.6), transparent 20%), var(--gothic-bg); color: var(--text-light)}
+
+.app-header{ background: linear-gradient(180deg, rgba(20,18,20,0.95), rgba(10,8,10,0.95)); padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.03) }
+.header-inner{ max-width: var(--app-max-width); margin: 0 auto; display:flex; align-items:center; gap:12px; padding:0 16px; justify-content:center }
+.logo{ font-size:22px; color: var(--text-light) }
+.title{ font-weight:700; font-size:20px; color: var(--text-light) }
+
+.app-main{ padding: 36px 0 }
+.container{ max-width: var(--app-max-width); margin: 0 auto; padding: 0 16px }
+
+.app-footer{ text-align:center; padding:18px 0; color:rgba(230,225,220,0.6) }
+
+/* Common button style for site */
+.btn {
+	border-radius: 8px;
+	padding: 8px 12px;
+	font-weight: 600;
+	cursor: pointer;
+	border: 1px solid rgba(255,255,255,0.06);
+}
+
+.btn-primary {
+	background: linear-gradient(90deg, #3b0b0f, #6b0f17);
+	color: var(--text-light);
+	box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+
+.btn-neutral {
+	background: rgba(255,255,255,0.02);
+	color: var(--text-light);
+}

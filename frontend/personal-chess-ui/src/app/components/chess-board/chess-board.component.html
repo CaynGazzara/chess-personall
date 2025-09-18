@@ -1,26 +1,29 @@
 <div class="chess-game">
   <div class="game-header">
-    <h2>Xadrez Personalizado</h2>
-    <div class="game-info">
-      <span>Jogador atual: {{ getPieceColorDisplay(currentPlayer) }}</span>
-      <span>Estado do jogo: {{
-        gameState === 'Check' ? 'Rei em Cheque' :
-        gameState === 'WhiteWon' ? 'Brancas Venceram' :
-        gameState === 'BlackWon' ? 'Pretas Venceram' :
-        gameState === 'Stalemate' ? 'Afogamento' :
-        gameState === 'Draw' ? 'Empate' :
-        gameState
-        }}</span>
-    </div>
+    <div class="controls">
+      <div class="game-info">
+        <span>Jogador atual: {{ getPieceColorDisplay(currentPlayer) }}</span>
+        <span>Estado do jogo: {{
+          gameState === 'Check' ? 'Rei em Cheque' :
+          gameState === 'WhiteWon' ? 'Brancas Venceram' :
+          gameState === 'BlackWon' ? 'Pretas Venceram' :
+          gameState === 'Stalemate' ? 'Afogamento' :
+          gameState === 'Draw' ? 'Empate' :
+          gameState
+          }}</span>
+      </div>
 
-    <div class="game-controls">
-      <button (click)="resetGame()" class="reset-btn" [disabled]="gameState === 'InProgress' || gameState === 'Check'">
-        ♻️ Reiniciar Jogo
-      </button>
+      <div class="game-controls">
+        <button (click)="resetGame()" class="btn btn-primary"
+          [disabled]="gameState === 'InProgress' || gameState === 'Check'">
+          ♻️ Reiniciar Jogo
+        </button>
+        <button class="btn btn-primary" (click)="goHome()">← Voltar</button>
 
-      <button (click)="loadBoard()" class="refresh-btn">
-        🔄 Atualizar
-      </button>
+        <button (click)="loadBoard()" class="btn btn-primary">
+          🔄 Atualizar
+        </button>
+      </div>
     </div>
   </div>
 
@@ -38,10 +41,6 @@
 
         <div *ngIf="piece" class="piece-container">
           <img *ngIf="getPieceImage(piece) as src" [src]="src" [alt]="piece.type" class="chess-piece">
-          <div class="piece-debug"
-            *ngIf="selectedPiece && selectedPiece.position.rank === i && selectedPiece.position.file === j">
-            ✓
-          </div>
         </div>
 
         <div class="move-indicator" *ngIf="isPossibleMove(i, j)">●</div>
@@ -49,12 +48,7 @@
     </div>
   </div>
 
-  <div class="debug-info" *ngIf="selectedPiece">
-    <h3>Informações de Debug:</h3>
-    <p>Peça selecionada: {{ selectedPiece.piece.type }} ({{ selectedPiece.piece.color }})</p>
-    <p>Posição: linha {{ selectedPiece.position.rank }}, coluna {{ selectedPiece.position.file }}</p>
-    <p>Movimentos possíveis: {{ possibleMoves.length }}</p>
-  </div>
+  <!-- debug info removed -->
 
   <div class="game-status-message" [class.status-check]="gameState === 'Check'"
     [class.status-checkmate]="gameState === 'WhiteWon' || gameState === 'BlackWon'"

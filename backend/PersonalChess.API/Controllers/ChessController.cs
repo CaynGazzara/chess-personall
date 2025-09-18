@@ -28,31 +28,42 @@ public class ChessController : ControllerBase
     [HttpPost("move")]
     public IActionResult MakeMove([FromBody] MoveRequest moveRequest)
     {
-        var from = new Position(moveRequest.From.Rank, moveRequest.From.File);
-        var to = new Position(moveRequest.To.Rank, moveRequest.To.File);
-
-        if (_board.MakeMove(from, to))
+        try
         {
-            var response = new
+            var from = new Position(moveRequest.From.Rank, moveRequest.From.File);
+            var to = new Position(moveRequest.To.Rank, moveRequest.To.File);
+
+            if (_board.MakeMove(from, to))
             {
-                Success = true,
-                Board = new
+                var response = new
                 {
-                    Squares = _board.SerializableSquares,
-                    CurrentPlayer = _board.CurrentPlayer,
-                    GameState = _board.GameState
-                },
-                Message = "Movimento realizado com sucesso"
-            };
+                    Success = true,
+                    Board = new
+                    {
+                        Squares = _board.SerializableSquares,
+                        CurrentPlayer = _board.CurrentPlayer.ToString(),
+                        GameState = _board.GameState.ToString()
+                    },
+                    Message = "Movimento realizado com sucesso"
+                };
 
-            return Ok(response);
+                return Ok(response);
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = "Movimento inválido - pode estar deixando o rei em cheque ou violando as regras do xadrez"
+            });
         }
-
-        return BadRequest(new
+        catch (Exception ex)
         {
-            Success = false,
-            Message = "Movimento inválido - pode estar deixando o rei em cheque ou violando as regras"
-        });
+            return StatusCode(500, new
+            {
+                Success = false,
+                Message = $"Erro interno: {ex.Message}"
+            });
+        }
     }
 
     [HttpPost("reset")]
