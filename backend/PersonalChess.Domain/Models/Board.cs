@@ -239,7 +239,7 @@ public class Board
         throw new InvalidOperationException($"Rei das {color} não encontrado no tabuleiro!");
     }
 
-    private bool IsKingInCheck(PieceColor color, Piece[,] board)
+    public bool IsKingInCheck(PieceColor color, Piece[,] board)
     {
         try
         {

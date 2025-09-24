@@ -35,4 +35,10 @@ public class Rook : Piece
         return board.Squares[to.Rank, to.File] == null ||
                board.Squares[to.Rank, to.File].Color != Color;
     }
+    public override Piece Clone()
+    {
+        var clone = new Rook(this.Color);
+        clone.HasMoved = this.HasMoved;
+        return clone;
+    }
 }

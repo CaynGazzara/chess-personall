@@ -57,7 +57,11 @@ export class ChessBoardComponent implements OnInit {
     const clickedPieceColor = this.convertPieceColor(clickedPiece?.color);
 
     if (this.selectedPiece) {
-      this.attemptMove(this.selectedPiece.position, clickedPosition);
+      if (this.isPossibleMove(row, col)) {
+        this.attemptMove(this.selectedPiece.position, clickedPosition);
+      }
+      this.selectedPiece = null;
+      this.possibleMoves = [];
     }
     else if (clickedPiece && clickedPieceColor === this.currentPlayer) {
       this.selectedPiece = { position: clickedPosition, piece: clickedPiece };
@@ -98,7 +102,7 @@ export class ChessBoardComponent implements OnInit {
 
   attemptMove(from: Position, to: Position): void {
     const targetPieceBeforeMove = this.board[to.rank][to.file];
-    const playerBeforeMove = this.currentPlayer; // Salva a cor do jogador antes do movimento
+    const playerBeforeMove = this.currentPlayer;
 
     this.chessService.makeMove(from, to).subscribe({
       next: (response: any) => {
@@ -107,7 +111,6 @@ export class ChessBoardComponent implements OnInit {
           this.currentPlayer = this.convertPieceColor(response.board.currentPlayer);
           this.gameState = this.convertGameState(response.board.gameState);
 
-          // CORREÇÃO: compara com playerBeforeMove, não com currentPlayer pós-movimento!
           if (
             targetPieceBeforeMove &&
             this.convertPieceColor(targetPieceBeforeMove.color) !== playerBeforeMove
@@ -185,10 +188,9 @@ export class ChessBoardComponent implements OnInit {
     if (!piece) return null;
     const colorRaw = this.convertPieceColor(piece.color);
     if (!colorRaw) return null;
-    const colorStr = String(colorRaw).toLowerCase();
     const typeStr = piece.type ? String(piece.type).toLowerCase() : '';
     if (!typeStr) return null;
-    return `/assets/images/chess-pieces/${colorStr}-${typeStr}.svg`;
+    return `/assets/images/chess-pieces/${colorRaw.toLowerCase()}-${typeStr}.svg`;
   }
 
   getFileLetter(file: number): string {
@@ -229,12 +231,17 @@ export class ChessBoardComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  // Movimentações completas para todas as peças
   private calculatePawnMoves(fromRow: number, fromCol: number, color: string, hasMoved: boolean): void {
     const direction = color === PieceColor.White ? 1 : -1;
     const startRow = color === PieceColor.White ? 1 : 6;
     const forwardRow = fromRow + direction;
+
+    // Movimento para frente (sem captura)
     if (this.isValidPosition(forwardRow, fromCol) && !this.board[forwardRow][fromCol]) {
       this.possibleMoves.push({ rank: forwardRow, file: fromCol });
+
+      // Movimento duplo inicial
       if (fromRow === startRow && !hasMoved) {
         const doubleRow = fromRow + 2 * direction;
         if (this.isValidPosition(doubleRow, fromCol) && !this.board[doubleRow][fromCol]) {
@@ -242,16 +249,18 @@ export class ChessBoardComponent implements OnInit {
         }
       }
     }
-    const captureLeft = { rank: forwardRow, file: fromCol - 1 };
-    const captureRight = { rank: forwardRow, file: fromCol + 1 };
-    [captureLeft, captureRight].forEach(capture => {
-      if (this.isValidPosition(capture.rank, capture.file)) {
-        const targetPiece = this.board[capture.rank][capture.file];
+
+    // Capturas diagonais
+    [fromCol - 1, fromCol + 1].forEach(captureCol => {
+      if (this.isValidPosition(forwardRow, captureCol)) {
+        const targetPiece = this.board[forwardRow][captureCol];
         if (targetPiece && this.convertPieceColor(targetPiece.color) !== color) {
-          this.possibleMoves.push(capture);
+          this.possibleMoves.push({ rank: forwardRow, file: captureCol });
         }
       }
     });
+
+    // TODO: En passant e promoção de peão
   }
 
   private calculateRookMoves(fromRow: number, fromCol: number, color: string): void {
@@ -310,7 +319,33 @@ export class ChessBoardComponent implements OnInit {
         }
       }
     });
-    // TODO: Implementar roque (castling)
+
+    // Roque (Castling) - regras simplificadas: só considera roque se rei e torre não moveram, e caminho está livre
+    if (!hasMoved) {
+      // Roque pequeno
+      if (this.isValidCastling(fromRow, fromCol, color, true)) {
+        this.possibleMoves.push({ rank: fromRow, file: fromCol + 2 });
+      }
+      // Roque grande
+      if (this.isValidCastling(fromRow, fromCol, color, false)) {
+        this.possibleMoves.push({ rank: fromRow, file: fromCol - 2 });
+      }
+    }
+  }
+
+  private isValidCastling(row: number, col: number, color: string, kingside: boolean): boolean {
+    // Simplificação: verifica se torre não moveu, caminho está livre, não está em cheque
+    const rookCol = kingside ? 7 : 0;
+    const direction = kingside ? 1 : -1;
+    const rook = this.board[row][rookCol];
+    if (!rook || rook.type !== 'Rook' || rook.color !== color || rook.hasMoved) return false;
+
+    // Casas entre rei e torre devem estar vazias
+    for (let c = col + direction; kingside ? c < rookCol : c > rookCol; c += direction) {
+      if (this.board[row][c]) return false;
+    }
+    // TODO: Não pode passar por casas atacadas (não implementado)
+    return true;
   }
 
   private calculateSlidingMoves(fromRow: number, fromCol: number, color: string, directions: any[]): void {

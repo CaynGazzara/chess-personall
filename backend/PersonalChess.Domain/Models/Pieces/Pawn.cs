@@ -30,4 +30,11 @@ public class Pawn : Piece
 
         return false;
     }
+
+    public override Piece Clone()
+    {
+        var clone = new Pawn(this.Color);
+        clone.HasMoved = this.HasMoved;
+        return clone;
+    }
 }

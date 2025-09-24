@@ -8,12 +8,12 @@
 
 .game-header {
   margin-bottom: 20px;
-  display:flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap:12px;
-  width:100%;
+  gap: 12px;
+  width: 100%;
   max-width: var(--app-max-width);
   margin-left: auto;
   margin-right: auto;
@@ -62,7 +62,7 @@
   padding: 8px 12px;
   font-weight: 600;
   cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   background: linear-gradient(90deg, #3b0b0f, #6b0f17);
   color: var(--text-light);
 }
@@ -76,7 +76,7 @@
 .chess-board {
   border: 6px solid var(--gothic-accent-2);
   padding: 12px;
-  background: linear-gradient(180deg, rgba(12,12,12,0.7), rgba(6,6,6,0.9));
+  background: linear-gradient(180deg, rgba(12, 12, 12, 0.7), rgba(6, 6, 6, 0.9));
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
   display: inline-block;
 }
@@ -109,9 +109,9 @@
 
 .board-square.selected {
   /* selected tile highlight with crimson accent */
-  background: linear-gradient(135deg, rgba(107,15,23,0.08), rgba(80,12,15,0.04));
-  box-shadow: inset 0 0 12px rgba(107,15,23,0.18), 0 0 0 3px rgba(107,15,23,0.06);
-  outline: 2px solid rgba(107,15,23,0.12);
+  background: linear-gradient(135deg, rgba(107, 15, 23, 0.08), rgba(80, 12, 15, 0.04));
+  box-shadow: inset 0 0 12px rgba(107, 15, 23, 0.18), 0 0 0 3px rgba(107, 15, 23, 0.06);
+  outline: 2px solid rgba(107, 15, 23, 0.12);
 }
 
 .board-square.possible-move::before {
@@ -119,17 +119,18 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: rgba(230,225,220,0.95); /* pale parchment dot */
+  background-color: rgba(230, 225, 220, 0.95);
+  /* pale parchment dot */
   position: absolute;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 .coordinate {
   position: absolute;
   font-size: 12px;
-  color: rgba(230,225,220,0.65);
+  color: rgba(230, 225, 220, 0.65);
   font-weight: 600;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
 }
 
 .coordinate:first-child {
@@ -145,7 +146,7 @@
 .chess-piece {
   width: 52px;
   height: 52px;
-  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.85));
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.85));
 }
 
 .piece-container {
@@ -165,12 +166,12 @@
 }
 
 .selected {
-  background: linear-gradient(135deg, rgba(107,15,23,0.08), rgba(80,12,15,0.04)) !important;
-  box-shadow: inset 0 0 12px rgba(107,15,23,0.18) !important;
+  background: linear-gradient(135deg, rgba(107, 15, 23, 0.08), rgba(80, 12, 15, 0.04)) !important;
+  box-shadow: inset 0 0 12px rgba(107, 15, 23, 0.18) !important;
 }
 
 .possible-move {
-  background-color: rgba(230,225,220,0.03) !important;
+  background-color: rgba(230, 225, 220, 0.03) !important;
 }
 
 .invalid-move {
@@ -193,8 +194,8 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: rgba(230,225,220,0.95);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(230, 225, 220, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .possible-capture {
@@ -209,8 +210,92 @@
   top: 20%;
   left: 20%;
   border-radius: 50%;
-  background: rgba(107,15,23,0.12);
-  border: 2px solid rgba(107,15,23,0.9);
+  background: rgba(107, 15, 23, 0.12);
+  border: 2px solid rgba(107, 15, 23, 0.9);
+}
+
+/* Cemitérios góticos */
+.board-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 28px;
+  /* Espaço extra entre cemitérios e tabuleiro */
+  margin: 18px 0 24px 0;
+}
+
+.cemetery {
+  min-width: 110px;
+  padding: 18px 14px 22px 14px;
+  margin: 0 8px;
+  /* Reduzido para não somar demais com o gap */
+  border: 4px solid #910823;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(35, 10, 20, 0.80) 80%, rgba(80, 15, 23, 0.75) 100%);
+  box-shadow:
+    0 0 16px 6px rgba(107, 15, 23, 0.35),
+    0 2px 24px 0px rgba(0, 0, 0, 0.7) inset,
+    0 0 0 6px rgba(220, 170, 70, 0.12) inset;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.cemetery--white {
+  border-color: #e7c88a;
+  /* dourado envelhecido */
+  background: linear-gradient(130deg, rgba(70, 60, 30, 0.11) 0%, rgba(232, 200, 138, 0.08) 100%);
+}
+
+.cemetery--black {
+  border-color: #910823;
+  /* vermelho gótico */
+  background: linear-gradient(135deg, rgba(35, 10, 20, 0.85) 80%, rgba(80, 15, 23, 0.65) 100%);
+}
+
+.cemetery h4 {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.15rem;
+  color: #e7c88a;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 6px #910823, 0 1px 0 #222;
+  text-align: center;
+}
+
+.cemetery-pieces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.cemetery-piece {
+  width: 38px;
+  height: 38px;
+  filter:
+    drop-shadow(0 4px 8px #910823) grayscale(32%) opacity(0.72) brightness(0.97);
+  transition: filter 0.2s;
+}
+
+.cemetery-piece:hover {
+  filter:
+    drop-shadow(0 0 14px #e7c88a) opacity(1) brightness(1.08);
+}
+
+.cemetery::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 6px rgba(220, 170, 70, 0.09) inset,
+    0 0 14px 5px rgba(107, 15, 23, 0.12);
+  z-index: 1;
 }
 
 /* Toast notifications */
@@ -251,6 +336,22 @@
 
 .debug-info {
   display: none;
+}
+
+@media (max-width: 700px) {
+  .cemetery {
+    min-width: 70px;
+    padding: 10px 5px 10px 5px;
+  }
+
+  .cemetery-piece {
+    width: 26px;
+    height: 26px;
+  }
+
+  .cemetery h4 {
+    font-size: 0.92rem;
+  }
 }
 
 @media (max-width: 600px) {
