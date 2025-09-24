@@ -9,7 +9,7 @@ This project presents a chess game that can be played by the user in a thematic 
 
 ## 📊 Chess Preview
 
-![Chess Preview](assets/gothic-chess-preview.png)
+![Chess Preview](assets/images/gothic-chess-preview.png)
 
 ## 📁 Project Contents
 
